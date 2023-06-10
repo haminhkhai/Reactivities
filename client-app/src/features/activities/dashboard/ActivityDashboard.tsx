@@ -16,14 +16,20 @@ interface Props {
     closeForm: () => void;
     createOrEdit: (activity: Activity) => void;
     deleteActivity: (id: string) => void;
+    submitting: boolean;
 }
 
-export default function ActivityDashBoard({ activities, selectedActivity, deleteActivity,
+export default function ActivityDashBoard({ activities, selectedActivity, deleteActivity, submitting,
     selectActivity, cancelSelectActivity, openForm, closeForm, editMode, createOrEdit}: Props) {
     return (
         <Grid>
             <GridColumn width='10'>
-                <ActivityList deleteActivity={deleteActivity} activities={activities} selectActivity={selectActivity} />
+                <ActivityList 
+                    deleteActivity={deleteActivity} 
+                    activities={activities} 
+                    selectActivity={selectActivity} 
+                    submitting={submitting}
+                />
             </GridColumn>
             <Grid.Column width='6'>
                 {/* double ampersands (&&) means anything to the right of it will be execute 
@@ -40,7 +46,12 @@ export default function ActivityDashBoard({ activities, selectedActivity, delete
                 }
                 {
                     editMode &&
-                    <ActivityForm closeForm={closeForm} activity={selectedActivity} createOrEdit={createOrEdit} />
+                    <ActivityForm 
+                        closeForm={closeForm} 
+                        activity={selectedActivity} 
+                        createOrEdit={createOrEdit} 
+                        submitting={submitting}
+                    />
                 }
             </Grid.Column>
         </Grid>
