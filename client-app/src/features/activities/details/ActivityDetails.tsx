@@ -1,14 +1,17 @@
 import React from "react";
 import { Button, Card, Image } from "semantic-ui-react";
 import { Activity } from "../../../app/models/activity";
+import { useStore } from "../../../app/stores/store";
+import LoadingComponent from "../../../app/layout/LoadingComponent";
 
-interface Props {
-    activity: Activity;
-    cancelSelectActivity: () => void;
-    openForm: (id: string) => void;
-}
+export default function ActivityDetails() {
 
-export default function ActivityDetails({ activity, cancelSelectActivity, openForm }: Props) {
+    const { activityStore } = useStore();
+    const { selectedActivity: activity, openForm, cancelSelectActivity } = activityStore;
+
+    //just to remove the error
+    if (!activity) return <LoadingComponent />; 
+
     return (
         <Card fluid>
             {/* Backtick (``) characters allowing for multi-line strings, 

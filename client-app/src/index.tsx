@@ -4,14 +4,18 @@ import 'semantic-ui-css/semantic.min.css'
 import './app/layout/style.css';
 import App from './app/layout/App';
 import reportWebVitals from './reportWebVitals';
+import { StoreContext, store } from './app/stores/store';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 root.render(
+  <StoreContext.Provider value={store}>
+    <App />
+  </StoreContext.Provider>
   //when using react strictmode it will render components twice in development, not in production
   // <React.StrictMode>
-    <App />
+
   // </React.StrictMode>
 );
 
