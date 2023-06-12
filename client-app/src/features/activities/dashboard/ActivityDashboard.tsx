@@ -1,15 +1,21 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Grid, GridColumn } from "semantic-ui-react";
 import ActivityList from './ActivityList';
-import ActivityDetails from '../details/ActivityDetails';
-import ActivityForm from '../form/ActivityForm';
 import { useStore } from '../../../app/stores/store';
 import { observer } from 'mobx-react-lite';
+import LoadingComponent from '../../../app/layout/LoadingComponent';
 
 export default observer(function ActivityDashBoard() {
 
-    const {activityStore} = useStore();
-    const {selectedActivity, editMode} = activityStore;
+    const { activityStore } = useStore();
+    const { loadActivities, activityRegistry } = activityStore;
+
+    useEffect(() => {
+        if(activityRegistry.size <= 1) loadActivities();
+    }, [activityRegistry.size, loadActivities])
+    //  ↑ prevent the event from fire multiple times
+
+    if (activityStore.loadingInitial) return <LoadingComponent content='Loading app' />
 
     return (
         <Grid>
@@ -21,14 +27,15 @@ export default observer(function ActivityDashBoard() {
                 so long as the left side is not null or undefined */}
                 {/* why you need this operator is because while react is trying to display this component 
                 but the Activity doesn't exist at this stage  */}
-                {
+                {/* {
                     selectedActivity && !editMode &&
                     <ActivityDetails />
                 }
                 {
                     editMode &&
                     <ActivityForm />
-                }
+                } */}
+                <h2>Activity filters</h2>
             </Grid.Column>
         </Grid>
     )
