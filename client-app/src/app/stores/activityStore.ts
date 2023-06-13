@@ -21,6 +21,21 @@ export default class ActivityStore {
             Date.parse(a.date) - Date.parse(b.date))
     }
 
+    //check https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/reduce
+    //to understand more 
+    //accumulator(groupActivity) The value resulting from the previous call to callbackFn. 
+    //On first call, initialValue if specified, otherwise the value of array[0].
+    //notice how initial value is set to understand this method
+    get groupActivities() {
+        return Object.entries(
+            this.activityByDate.reduce((groupActivities, activity) => {
+                const date = activity.date;
+                groupActivities[date] = groupActivities[date] ? [...groupActivities[date], activity] : [activity];
+                return groupActivities;
+            }, {} as { [key: string]: Activity[] })
+        )
+    }
+
     setLoadingInitial = (state: boolean) => {
         this.loadingInitial = state;
     }
@@ -46,8 +61,8 @@ export default class ActivityStore {
 
     loadActivity = async (id: string) => {
         let activity = this.getActivity(id);
-        if (activity) { 
-            this.selectedActivity = activity 
+        if (activity) {
+            this.selectedActivity = activity
             return activity;
         }
         else {
@@ -55,7 +70,7 @@ export default class ActivityStore {
             try {
                 activity = await agent.Activities.details(id);
                 this.setActivity(activity);
-                runInAction(()=>{
+                runInAction(() => {
                     this.selectedActivity = activity;
                 });
                 this.setLoadingInitial(false);

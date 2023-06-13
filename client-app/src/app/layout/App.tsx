@@ -16,6 +16,7 @@ function App() {
           (<>
             <NavBar />
             <Container style={{ marginTop: "7em" }}>
+              {/* react-route package */}
               <Outlet />
             </Container>
           </>)
