@@ -1,5 +1,7 @@
 using Application.Activities;
 using Application.Core;
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
@@ -10,7 +12,7 @@ namespace API.Extensions
     {
         //////////////////////////this keyword to refer to this Iservicecollection 
         //////////////////////////hence you dont need to pass an argument, and it's a way to write extension method
-        public static IServiceCollection AddApplicationServices(this IServiceCollection services,
+        public static object AddApplicationServices(this IServiceCollection services,
             IConfiguration config)
         {
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -32,6 +34,8 @@ namespace API.Extensions
             );
             services.AddMediatR(typeof(List.Handler));
             services.AddAutoMapper(typeof(MappingProfiles).Assembly);
+            services.AddFluentValidationAutoValidation();
+            services.AddValidatorsFromAssemblyContaining<Create>();
             return services;
         }
     }

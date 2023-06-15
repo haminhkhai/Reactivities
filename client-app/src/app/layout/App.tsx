@@ -4,6 +4,7 @@ import NavBar from './NavBar';
 import { observer } from 'mobx-react-lite';
 import { Outlet, useLocation } from 'react-router-dom';
 import HomePage from '../../features/home/HomePage';
+import { ToastContainer } from 'react-toastify';
 
 function App() {
   const location = useLocation();
@@ -11,6 +12,7 @@ function App() {
     //we not allowed to return 2 different elements 
     //which have the same level inside a react component so wrap it with <></>
     <>
+    <ToastContainer position='bottom-right' theme='colored' />
       {
         location.pathname === '/' ? <HomePage /> :
           (<>
