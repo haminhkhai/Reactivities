@@ -12,7 +12,7 @@ namespace API.Extensions
     {
         //////////////////////////this keyword to refer to this Iservicecollection 
         //////////////////////////hence you dont need to pass an argument, and it's a way to write extension method
-        public static object AddApplicationServices(this IServiceCollection services,
+        public static IServiceCollection AddApplicationServices(this IServiceCollection services,
             IConfiguration config)
         {
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
