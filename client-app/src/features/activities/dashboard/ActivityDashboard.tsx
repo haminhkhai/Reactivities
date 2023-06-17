@@ -16,7 +16,7 @@ export default observer(function ActivityDashBoard() {
     }, [activityRegistry.size, loadActivities])
     //  ↑ prevent the event from fire multiple times
 
-    if (activityStore.loadingInitial) return <LoadingComponent content='Loading app' />
+    if (activityStore.loadingInitial) return <LoadingComponent content='Loading activities...' />
 
     return (
         <Grid>
