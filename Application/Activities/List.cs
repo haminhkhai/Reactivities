@@ -1,4 +1,6 @@
 using Application.Core;
+using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Domain;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -9,19 +11,22 @@ namespace Application.Activities
 {
     public class List
     {
-        public class Query : IRequest<Result<List<Activity>>> { }
-        
-        public class Handler : IRequestHandler<Query, Result<List<Activity>>>
+        public class Query : IRequest<Result<List<ActivityDto>>> { }
+
+        public class Handler : IRequestHandler<Query, Result<List<ActivityDto>>>
         {
             private readonly DataContext _context;
             private readonly ILogger _logger;
-            public Handler(DataContext context, ILogger<List> logger)
+            private readonly IMapper _mapper;
+
+            public Handler(DataContext context, ILogger<List> logger, IMapper mapper)
             {
+                _mapper = mapper;
                 _logger = logger;
                 _context = context;
             }
 
-            public async Task<Result<List<Activity>>> Handle(Query request, CancellationToken cancellationToken)
+            public async Task<Result<List<ActivityDto>>> Handle(Query request, CancellationToken cancellationToken)
             {
                 //Describe how cancellation token works
                 // try
@@ -37,7 +42,18 @@ namespace Application.Activities
                 // {
                 //     _logger.LogInformation("Task was cancelled");
                 // }
-                return Result<List<Activity>>.Success(await _context.Activities.ToListAsync());
+                
+                //test linq for fun
+                // var activitiesDto = from a in _context.Activities
+                //                     join b in _context.ActivityAttendees
+                //                     on a.Id equals b.ActivityId into lj
+                //                     select lj;
+
+                var activities = await _context.Activities
+                                            .ProjectTo<ActivityDto>(_mapper.ConfigurationProvider)
+                                            .ToListAsync();
+
+                return Result<List<ActivityDto>>.Success(activities);
             }
         }
     }

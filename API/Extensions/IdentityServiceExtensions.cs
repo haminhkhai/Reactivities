@@ -1,7 +1,9 @@
 using System.Text;
 using API.Services;
 using Domain;
+using Infastructure.Security;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
 using Persistence;
 
@@ -35,7 +37,15 @@ namespace API.Extensions
                     };
                 });
 
+            services.AddAuthorization(opt =>
+            {
+                opt.AddPolicy("IsActivityHost", policy =>
+                {
+                    policy.Requirements.Add(new IsHostRequirement());
+                });
+            });
 
+            services.AddTransient<IAuthorizationHandler, IsHostRequirementHandler>();
             //add scope means that this token service is going to be scoped to the HTTP request itself
             services.AddScoped<TokenService>();
             return services;
