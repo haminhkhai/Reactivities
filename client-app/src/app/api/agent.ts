@@ -1,5 +1,5 @@
 import axios, { AxiosError, AxiosResponse } from "axios";
-import { Activity } from "../models/activity";
+import { Activity, ActivityFormValues } from "../models/activity";
 import { toast } from "react-toastify";
 import { router } from "../router/Routes";
 import { store } from "../stores/store";
@@ -15,7 +15,7 @@ axios.defaults.baseURL = 'http://localhost:5000/api';
 
 //bộ đón chặn https://axios-http.com/vi/docs/interceptors
 axios.interceptors.response.use(async response => {
-    await sleep(1000);
+    await sleep(500);
     return response;
 
 }, (error: AxiosError) => {
@@ -73,9 +73,10 @@ const request = {
 const Activities = {
     list: () => request.get<Activity[]>('/activities'),
     details: (id: string) => request.get<Activity>(`/activities/${id}`),
-    create: (activity: Activity) => request.post<void>('/activities', activity),
-    update: (activity: Activity) => request.put<void>(`/activities/${activity.id}`, activity),
-    delete: (id: string) => request.del(`/activities/${id}`)
+    create: (activity: ActivityFormValues) => request.post<void>('/activities', activity),
+    update: (activity: ActivityFormValues) => request.put<void>(`/activities/${activity.id}`, activity),
+    delete: (id: string) => request.del(`/activities/${id}`),
+    attend: (id: string) => request.post<void>(`/activities/${id}/attend`, {})
 }
 
 const Account = {
