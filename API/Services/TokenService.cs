@@ -12,6 +12,7 @@ namespace API.Services
 {
     public class TokenService
     {
+        //appsetting.development.json
         private readonly IConfiguration _config;
         public TokenService(IConfiguration config)
         {

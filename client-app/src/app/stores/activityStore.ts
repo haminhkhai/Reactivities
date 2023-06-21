@@ -62,7 +62,7 @@ export default class ActivityStore {
         const user = store.userStore.user;
         if (user) {
             //some return a boolean if the callback func returns true for any elements of the array
-            //yeah if currently login user in the list of attendees then set is going to true and false if not
+            //yeah if currently logged in user in the list of attendees then set is going to true and false if not
             activity.isGoing = activity.attendees!.some(
                 a => a.username == user.username
             )
@@ -158,13 +158,13 @@ export default class ActivityStore {
 
                 if (this.selectedActivity?.isGoing) {
                     this.selectedActivity.attendees =
-                        //filter out currently login user from attendees array
+                        //filter out currently logged in user from attendees array
                         //because they canceling attendance
                         this.selectedActivity.attendees?.filter(a => a.username !== user?.username)
 
                     this.selectedActivity.isGoing = false;
                 } else {
-                    //add currently login user to attendees array because they gonna attend the activity
+                    //add currently logged in user to attendees array because they gonna attend the activity
                     const attendee = new Profile(user!);
                     this.selectedActivity?.attendees?.push(attendee);
                     this.selectedActivity!.isGoing = true;
