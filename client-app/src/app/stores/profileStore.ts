@@ -2,6 +2,7 @@ import { makeAutoObservable, runInAction } from "mobx";
 import { Photo, Profile } from "../models/profile";
 import agent from "../api/agent";
 import { store } from "./store";
+import UserStore from "./userStore";
 
 export default class ProfileStore {
     profile: Profile | null = null;
@@ -71,6 +72,8 @@ export default class ProfileStore {
                     this.profile.photos.find(p => p.id === photo.id)!.isMain = true;
                     //set profile image to selected photo
                     this.profile.image = photo.url;
+                    //reload activity dashboard
+                    store.activityStore.loadActivities();
                     this.loading = false;
                 }
             });
@@ -97,4 +100,23 @@ export default class ProfileStore {
             runInAction(() => this.loading = false);
         }
     }
+
+    editProfile = async (profile: Partial<Profile>) => {
+        try {
+            await agent.Profiles.edit(profile)
+            runInAction(() => {
+                if (profile.displayName
+                    && profile.displayName !== store.userStore.user?.displayName) {
+                    store.userStore.setDisplayName(profile.displayName!)
+                }
+                this.profile = { ...this.profile, ...profile as Profile }
+                //reload activity dashboard
+                store.activityStore.loadActivities();
+            });
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+
 }

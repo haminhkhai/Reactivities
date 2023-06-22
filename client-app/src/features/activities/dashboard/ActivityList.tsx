@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React, { Fragment } from 'react'
 
 import { Header } from 'semantic-ui-react';
 import { useStore } from '../../../app/stores/store';
@@ -9,20 +9,20 @@ export default observer(function ActivityList() {
     const { activityStore } = useStore();
     const { groupActivities } = activityStore;
 
-    // console.log(groupActivities);
-
     return (
         <>
-            {groupActivities.map(([group, activities]) => (
-                <Fragment key={group}>
-                    <Header sub color='teal'>
-                        {group}
-                    </Header>
-                    {activities.map(activity => (
-                        <ActivityListItem key={activity.id} activity={activity} />
-                    ))}
-                </Fragment>
-            ))}
+            {
+                groupActivities.map(([group, activities]) => (
+                    <Fragment key={group}>
+                        <Header sub color='teal'>
+                            {group}
+                        </Header>
+                        {activities.map(activity => (
+                            <ActivityListItem key={activity.id} activity={activity} />
+                        ))}
+                    </Fragment>
+                ))
+            }
         </>
     )
 })

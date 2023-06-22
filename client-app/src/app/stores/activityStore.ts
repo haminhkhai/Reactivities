@@ -1,7 +1,6 @@
 import { makeAutoObservable, runInAction } from "mobx";
 import { Activity, ActivityFormValues } from "../models/activity";
 import agent from "../api/agent";
-import { v4 as uuid } from 'uuid';
 import { format } from "date-fns";
 import { store } from "./store";
 import UserStore from "./userStore";
@@ -68,6 +67,8 @@ export default class ActivityStore {
             )
             activity.isHost = activity.hostUsername === user.username;
             activity.host = activity.attendees?.find(x => x.username === activity.hostUsername);
+            activity.host!.image = user.image;
+            console.log(activity.host!.image);
         }
 
         activity.date = new Date(activity.date!);
@@ -182,7 +183,7 @@ export default class ActivityStore {
         this.loading = true;
         try {
             await agent.Activities.attend(this.selectedActivity!.id);
-            runInAction(()=>{
+            runInAction(() => {
                 this.selectedActivity!.isCancelled = !this.selectedActivity?.isCancelled;
                 this.activityRegistry.set(this.selectedActivity!.id, this.selectedActivity!);
             });
