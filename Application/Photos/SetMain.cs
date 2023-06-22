@@ -39,7 +39,7 @@ namespace Application.Photos
                 if (photo == null) return null;
 
                 var currentMain = user.Photos.FirstOrDefault(x => x.IsMain);
-                //set other photo of user to not main photo
+                //set other photos of user to not main photo
                 if (currentMain != null) currentMain.IsMain = false;
                 
                 photo.IsMain = true;

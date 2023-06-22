@@ -43,7 +43,7 @@ namespace Application.Photos
                     Id = photoUploadResult.PublicId
                 };
 
-                //if there are no photos that are set to main 
+                //if there are no photo that set to main set this photo as main photo
                 if (!user.Photos.Any(x => x.IsMain)) photo.IsMain = true;
                 //add photo obj to user
                 user.Photos.Add(photo);

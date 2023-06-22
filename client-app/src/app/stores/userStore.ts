@@ -5,6 +5,7 @@ import { store } from "./store";
 import { router } from "../router/Routes";
 
 export default class UserStore {
+    //currently logged in user
     user: User | null = null;
 
     constructor() {
@@ -55,5 +56,9 @@ export default class UserStore {
         } catch (error) {
             console.log(error);
         }
+    }
+
+    setImage = (image: string) => {
+        if (this.user) this.user.image = image;
     }
 }
