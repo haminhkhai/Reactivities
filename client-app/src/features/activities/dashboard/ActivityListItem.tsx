@@ -6,7 +6,7 @@ import { format } from "date-fns";
 import ActivityListItemAttendee from "./ActivityListItemAttendee";
 
 interface Props {
-    activity: Activity
+    activity: Activity;
 }
 
 export default function ActivityListItem({ activity }: Props) {

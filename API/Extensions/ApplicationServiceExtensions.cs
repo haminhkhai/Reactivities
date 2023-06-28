@@ -31,7 +31,12 @@ namespace API.Extensions
                 {
                     opt.AddPolicy("CorsPolicy", policy =>
                     {
-                        policy.AllowAnyMethod().AllowAnyHeader().WithOrigins("http://localhost:3000");
+                        policy
+                            .AllowAnyMethod()
+                            .AllowAnyHeader()
+                            .AllowCredentials()
+                            .WithOrigins("http://localhost:3000");
+
                     });
                 }
             );
@@ -45,6 +50,9 @@ namespace API.Extensions
             services.AddScoped<IPhotoAccessor, PhotoAccessor>();
             //get config from appsetting.json
             services.Configure<CloudinarySettings>(config.GetSection("Cloudinary"));
+            //note: we need to tell our program class bout our new hub and where
+            //to route the signalR request to
+            services.AddSignalR();
 
             return services;
         }

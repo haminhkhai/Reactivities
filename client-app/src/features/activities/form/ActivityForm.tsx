@@ -59,6 +59,7 @@ export default observer(function ActivityForm() {
                 enableReinitialize
                 initialValues={activity}
                 onSubmit={values => handleFormSubmit(values)}>
+                    
                 {({ handleSubmit, isValid, isSubmitting, dirty }) => (
                     <Form className="ui form" onSubmit={handleSubmit} autoComplete='off'>
                         <MyTextInput name='title' placeholder='Title' />

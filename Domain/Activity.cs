@@ -12,5 +12,6 @@ namespace Domain
         public bool IsCancelled { get; set; }
         //initialize with a new List because when we add activity we can't add ActivityAttendee to null collection;
         public ICollection<ActivityAttendee> Attendees { get; set; } = new List<ActivityAttendee>();
+        public ICollection<Comment> Comments { get; set; } = new List<Comment>();
     }
 }
