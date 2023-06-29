@@ -8,13 +8,14 @@ import ActivityFilters from './ActivityFilters';
 
 export default observer(function ActivityDashBoard() {
 
-    const { activityStore } = useStore();
+    const { activityStore, userStore} = useStore();
     const { loadActivities, activityRegistry } = activityStore;
 
     useEffect(() => {
-        if (activityRegistry.size <= 1)
+        if (activityRegistry.size <= 1 && userStore.user) {
             loadActivities();
-    }, [activityRegistry.size, loadActivities])
+        }
+    }, [loadActivities, activityRegistry.size, userStore.user])
     //  ↑ prevent the event from fire multiple times
 
     if (activityStore.loadingInitial) return <LoadingComponent content='Loading activities...' />

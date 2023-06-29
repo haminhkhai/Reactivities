@@ -41,12 +41,13 @@ export default class UserStore {
             //throw the error back to the component that call this login method
             throw error;
         }
-    } 
+    }
 
     logout = () => {
         store.commonStore.setToken(null);
         this.user = null;
         router.navigate('/');
+        store.activityStore.clearActivityRegistry();
     }
 
     getUser = async () => {

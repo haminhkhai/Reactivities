@@ -3,7 +3,6 @@ import { Activity, ActivityFormValues } from "../models/activity";
 import agent from "../api/agent";
 import { format } from "date-fns";
 import { store } from "./store";
-import UserStore from "./userStore";
 import { Profile } from "../models/profile";
 
 export default class ActivityStore {
@@ -63,12 +62,11 @@ export default class ActivityStore {
             //some return a boolean if the callback func returns true for any elements of the array
             //yeah if currently logged in user in the list of attendees then set is going to true and false if not
             activity.isGoing = activity.attendees!.some(
-                a => a.username == user.username
+                a => a.username === user.username
             )
             activity.isHost = activity.hostUsername === user.username;
             activity.host = activity.attendees?.find(x => x.username === activity.hostUsername);
-            activity.host!.image = user.image;
-            console.log(activity.host!.image);
+            activity.host!.image = activity.attendees?.find(x => x.username === activity.hostUsername)?.image;
         }
 
         activity.date = new Date(activity.date!);
@@ -194,7 +192,22 @@ export default class ActivityStore {
         }
     }
 
+    updateAttendeeFollowing = (username: string) => {
+        this.activityRegistry.forEach(activity => {
+            activity.attendees.forEach(attendee => {
+                if (attendee.username === username) {
+                    attendee.following ? attendee.followersCount-- : attendee.followersCount++;
+                    attendee.following = !attendee.following;
+                }
+            })
+        })
+    }
+
     clearSelectedActivity = () => {
         this.selectedActivity = undefined;
+    }
+
+    clearActivityRegistry = () => {
+        runInAction(() => this.activityRegistry.clear());
     }
 }

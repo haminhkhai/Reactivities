@@ -61,7 +61,7 @@ const responseBody = <T>(response: AxiosResponse<T>) => response.data;
 axios.interceptors.request.use(config => {
     const token = store.commonStore.token;
     if (token && config.headers) config.headers.Authorization = `Bearer ${token}`
-    return config; 
+    return config;
 })
 
 const request = {
@@ -85,7 +85,6 @@ const Account = {
     /////////////////////////////////////////////<User> here is what we gonna get back from request
     login: (user: UserFormValues) => request.post<User>('/account/login', user),
     register: (user: UserFormValues) => request.post<User>('/account/register', user)
-
 }
 
 const Profiles = {
@@ -95,11 +94,14 @@ const Profiles = {
         let formData = new FormData();
         formData.append('File', file);
         return axios.post<Photo>('/photos', formData, {
-            headers: {'Content-Type': 'multipart/form-data'}
+            headers: { 'Content-Type': 'multipart/form-data' }
         })
     },
     setMainPhoto: (id: string) => request.post(`/photos/${id}/setmain`, {}),
-    deletePhoto: (id: string) => request.del(`/photos/${id}`)
+    deletePhoto: (id: string) => request.del(`/photos/${id}`),
+    updateFollowing: (username: string) => request.post(`/follow/${username}`, {}),
+    listFollowings: (username: string, predicate: string) => 
+        request.get<Profile[]>(`/follow/${username}?predicate=${predicate}`)
 }
 
 const agent = {

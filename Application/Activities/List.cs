@@ -1,4 +1,5 @@
 using Application.Core;
+using Application.Interfaces;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Domain;
@@ -18,9 +19,11 @@ namespace Application.Activities
             private readonly DataContext _context;
             private readonly ILogger _logger;
             private readonly IMapper _mapper;
+            private readonly IUserAccessor _userAccessor;
 
-            public Handler(DataContext context, ILogger<List> logger, IMapper mapper)
+            public Handler(DataContext context, ILogger<List> logger, IMapper mapper, IUserAccessor userAccessor)
             {
+                _userAccessor = userAccessor;
                 _mapper = mapper;
                 _logger = logger;
                 _context = context;
@@ -42,17 +45,18 @@ namespace Application.Activities
                 // {
                 //     _logger.LogInformation("Task was cancelled");
                 // }
-                
+
                 //test linq for fun
                 // var activitiesDto = from a in _context.Activities
                 //                     join b in _context.ActivityAttendees
                 //                     on a.Id equals b.ActivityId into lj
                 //                     select lj;
-
+                var test = _userAccessor.GetUsername();
                 var activities = await _context.Activities
-                                            .ProjectTo<ActivityDto>(_mapper.ConfigurationProvider)
-                                            .ToListAsync();
-
+                    .ProjectTo<ActivityDto>(_mapper.ConfigurationProvider, 
+                        new { currentUsername = _userAccessor.GetUsername() })
+                    .ToListAsync();
+            
                 return Result<List<ActivityDto>>.Success(activities);
             }
         }
