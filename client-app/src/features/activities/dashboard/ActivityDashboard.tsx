@@ -1,15 +1,25 @@
-import React, { useEffect } from 'react';
-import { Grid, GridColumn } from "semantic-ui-react";
+import React, { useEffect, useState } from 'react';
+import { Grid, GridColumn, Loader } from "semantic-ui-react";
 import ActivityList from './ActivityList';
 import { useStore } from '../../../app/stores/store';
 import { observer } from 'mobx-react-lite';
 import LoadingComponent from '../../../app/layout/LoadingComponent';
 import ActivityFilters from './ActivityFilters';
+import { PagingParams } from '../../../app/models/pagination';
+import InfiniteScroll from 'react-infinite-scroller';
+import ActivityListItemPlaceholder from './ActivityListItemPlaceHolder';
 
 export default observer(function ActivityDashBoard() {
 
-    const { activityStore, userStore} = useStore();
-    const { loadActivities, activityRegistry } = activityStore;
+    const { activityStore, userStore } = useStore();
+    const { loadActivities, activityRegistry, setPagingParams, pagination } = activityStore;
+    const [loadingNext, setLoadingNext] = useState(false);
+
+    function handleGetNext() {
+        setLoadingNext(true);
+        setPagingParams(new PagingParams(pagination!.currentPage + 1));
+        loadActivities().then(() => setLoadingNext(false));
+    }
 
     useEffect(() => {
         if (activityRegistry.size <= 1 && userStore.user) {
@@ -18,27 +28,32 @@ export default observer(function ActivityDashBoard() {
     }, [loadActivities, activityRegistry.size, userStore.user])
     //  ↑ prevent the event from fire multiple times
 
-    if (activityStore.loadingInitial) return <LoadingComponent content='Loading activities...' />
-
     return (
         <Grid>
             <GridColumn width='10'>
-                <ActivityList />
+                {
+                    activityStore.loadingInitial && !loadingNext ? 
+                    (<>
+                        <ActivityListItemPlaceholder />
+                        <ActivityListItemPlaceholder />
+                        <ActivityListItemPlaceholder />
+                    </>) : 
+                    <InfiniteScroll
+                        pageStart={0}
+                        loadMore={handleGetNext}
+                        hasMore={!loadingNext && !!pagination && pagination.currentPage < pagination.totalPages}
+                        initialLoad={false}
+                    >
+                    <ActivityList />
+                    </InfiniteScroll>
+                }
+
             </GridColumn>
             <Grid.Column width='6'>
-                {/* double ampersands (&&) means anything to the right of it will be execute 
-                so long as the left side is not null or undefined */}
-                {/* why you need this operator is because while react is trying to display this component 
-                but the Activity doesn't exist at this stage  */}
-                {/* {
-                    selectedActivity && !editMode &&
-                    <ActivityDetails />
-                }
-                {
-                    editMode &&
-                    <ActivityForm />
-                } */}
                 <ActivityFilters />
+            </Grid.Column>
+            <Grid.Column width={10}>
+                <Loader active={loadingNext} />
             </Grid.Column>
         </Grid>
     )

@@ -1,4 +1,5 @@
 using Application.Activities;
+using Application.Core;
 using Application.Interfaces;
 using Domain;
 using Microsoft.AspNetCore.Authorization;
@@ -10,9 +11,9 @@ namespace API.Controllers
     {
         [HttpGet] //api/activities
         //CancellationToken is passed from api to application via mediator
-        public async Task<ActionResult<List<Activity>>> GetActivities(CancellationToken ct, IUserAccessor user)
+        public async Task<ActionResult> GetActivities([FromQuery] ActivityParams param)
         {
-            return HandleResult(await Mediator.Send(new List.Query(), ct));
+            return HandlePagedResult(await Mediator.Send(new List.Query { Params = param }));
         }
 
         [HttpGet("{id}")] //api/activities/guid
